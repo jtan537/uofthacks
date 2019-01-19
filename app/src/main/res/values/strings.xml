@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">GameCentre</string>
+
+    <string name="score_game_prompt">Choose a game</string>
+
+    <string-array name="games">
+        <item>SlidingTiles</item>
+        <item>MineSweeper</item>
+        <item>PowersPlus</item>
+    </string-array>
+</resources>
