@@ -2,17 +2,43 @@ package fall2018.csc2017.GameCentre.UserInterfaceElements;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import fall2018.csc2017.GameCentre.DataManagers.Event;
 import fall2018.csc2017.GameCentre.R;
 
 
 public class EventActivity extends AppCompatActivity {
+
+    private static final String USER_EMAIL = "Email";
+    private static final String KEY_FRIENDS = "Friends";
+    private static final String TAG = "EventActivity";
+
+    List<String> friends;
+
+    private String userEmail;
+
+    private FirebaseFirestore db ;
+    private DocumentReference friendsRef;
     /**
      * The current logged in user
      */
@@ -23,7 +49,10 @@ public class EventActivity extends AppCompatActivity {
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+    //Fetches the current user
+        userEmail = (String) getIntent().getSerializableExtra("CurUser");
+        db = FirebaseFirestore.getInstance();
+        friendsRef  = db.collection("Users").document(userEmail);
 //        //Make general later
 //
 //        //Fetches the high scores
@@ -78,12 +107,41 @@ public class EventActivity extends AppCompatActivity {
                 String emailName = emailNameText.getText().toString();
                 //switchToGame(ExpenseAdder.class);
 
+                // Sets up friend list
+                loadFriends(v);
+                friends.add(emailName);
+                Map<String, Object> user = new HashMap<>();
+                user.put(KEY_FRIENDS, friends);
+
+                db.collection("Users").document(userEmail).set(user);
+
                 Toast.makeText(getApplicationContext(),
-                        "No event to load!",
+                        friends.get(0),
                         Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+    public void loadFriends(View v){
+        friendsRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    friends = (List<String>) documentSnapshot.get(KEY_FRIENDS);
+                }else{
+                    friends = new ArrayList<>();
+                }
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(EventActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "onFailure");
+;                    }
+                });
+    }
+
 
     /**
      * Checks to see if the user has selected sliding tiles as their game
