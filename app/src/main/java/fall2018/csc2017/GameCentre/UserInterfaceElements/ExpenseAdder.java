@@ -3,15 +3,11 @@ package fall2018.csc2017.GameCentre.UserInterfaceElements;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import fall2018.csc2017.GameCentre.DataManagers.User;
 import fall2018.csc2017.GameCentre.R;
 
 public class ExpenseAdder extends AppCompatActivity {
 
-    /**
-     * The current logged in user
-     */
-    private User curUser;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +26,6 @@ public class ExpenseAdder extends AppCompatActivity {
 //        difficulty = null;
 //
         //Fetches the current user
-        curUser = (User) getIntent().getSerializableExtra("CurUser");
         //Sets the view
         setContentView(R.layout.activity_expense_adder);
 //        //Adds the necessary buttons

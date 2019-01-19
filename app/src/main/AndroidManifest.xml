@@ -10,21 +10,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name="fall2018.csc2017.GameCentre.LaunchCentre">
+        <activity android:name="fall2018.csc2017.GameCentre.UserInterfaceElements.LaunchCentre">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="fall2018.csc2017.GameCentre.SlidingTiles.SlidingTilesGameActivity"></activity>
-        <activity android:name="fall2018.csc2017.GameCentre.UserInterfaceElements.GameHubActivity"></activity>
-        <activity android:name="fall2018.csc2017.GameCentre.SlidingTiles.SlidingTilesStartingActivity"></activity>
-        <activity android:name="fall2018.csc2017.GameCentre.UserInterfaceElements.LeaderboardActivity"></activity>
-        <activity android:name="fall2018.csc2017.GameCentre.MineSweeper.MineSweeperStartingActivity"></activity>
-        <activity android:name="fall2018.csc2017.GameCentre.MineSweeper.MineSweeperGameActivity"></activity>
-        <activity android:name="fall2018.csc2017.GameCentre.PowersPlus.PowersPlusStartingActivity"></activity>
-        <activity android:name="fall2018.csc2017.GameCentre.PowersPlus.PowersPlusGameActivity"></activity>
         <activity android:name="fall2018.csc2017.GameCentre.UserInterfaceElements.EventActivity"></activity>
     </application>
 

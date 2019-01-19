@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
-    //buildToolsVersion '23.0.1'
+    buildToolsVersion '23.0.3'
     compileSdkVersion 27
     defaultConfig {
         applicationId "fall2018.csc2017.GameCentre"
@@ -39,4 +40,3 @@ dependencies {
 
 
 }
-apply plugin: 'com.google.gms.google-services'

@@ -9,16 +9,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import fall2018.csc2017.GameCentre.DataManagers.User;
 import fall2018.csc2017.GameCentre.R;
-import fall2018.csc2017.GameCentre.SlidingTiles.SlidingTilesBoard;
-import fall2018.csc2017.GameCentre.SlidingTiles.SlidingTilesStartingActivity;
+
 
 public class EventActivity extends AppCompatActivity {
     /**
      * The current logged in user
      */
-    private User curUser;
     /**
      * What happens when the activity is loaded
      *
@@ -41,7 +38,6 @@ public class EventActivity extends AppCompatActivity {
 //        difficulty = null;
 //
         //Fetches the current user
-        curUser = (User) getIntent().getSerializableExtra("CurUser");
         //Sets the view
         setContentView(R.layout.activity_event_starting);
 //        //Adds the necessary buttons
@@ -123,7 +119,6 @@ public class EventActivity extends AppCompatActivity {
     private void switchToGame(Class nextActivity) {
         Intent tmp = new Intent(this, nextActivity);
         //Store the current user in the next activity
-        tmp.putExtra("CurUser", curUser);
         startActivity(tmp);
     }
 }
