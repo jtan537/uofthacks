@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import fall2018.csc2017.GameCentre.DataManagers.SavedGamesManager;
-import fall2018.csc2017.GameCentre.MineSweeper.MineSweeperBoardManager;
-import fall2018.csc2017.GameCentre.PowersPlus.PowersPlusBoardManager;
-import fall2018.csc2017.GameCentre.SlidingTiles.SlidingTilesBoardManager;
 
 /**
  * User class with equal user and other properties.
@@ -63,12 +60,6 @@ public class User implements Serializable {
      * PowerPlus.  Will expand as we need to create new saved games for new users
      */
     public void createSavedGames() {
-        SavedGamesManager<SlidingTilesBoardManager> SlidingTilesSaves = new SavedGamesManager<>();
-        SavedGamesManager<MineSweeperBoardManager> MineSweeperSaves = new SavedGamesManager<>();
-        SavedGamesManager<PowersPlusBoardManager> PowersPlusSaves = new SavedGamesManager<>();
-        userSavedGames.put("SlidingTiles", SlidingTilesSaves);
-        userSavedGames.put("MineSweeper", MineSweeperSaves);
-        userSavedGames.put("PowersPlus", PowersPlusSaves);
     }
 
     /**
@@ -77,16 +68,7 @@ public class User implements Serializable {
      * @param game The game that was added
      */
     public void addSave(String game){
-        switch (game){
-            case "MineSweeper":
-                SavedGamesManager<MineSweeperBoardManager> MineSweeperSaves = new SavedGamesManager<>();
-                userSavedGames.put(game, MineSweeperSaves);
-                break;
-            case "PowersPlus":
-                SavedGamesManager<PowersPlusBoardManager> PowersPlusSaves = new SavedGamesManager<>();
-                userSavedGames.put(game, PowersPlusSaves);
-                break;
-        }
+
     }
 
     /**
