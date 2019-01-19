@@ -58,7 +58,7 @@ public class LaunchCentre extends BaseActivity implements
         findViewById(R.id.enterButton).setOnClickListener(this);
         findViewById(R.id.buttonCreate).setOnClickListener(this);
         findViewById(R.id.buttonSignOut).setOnClickListener(this);
-        findViewById(R.id.buttonVerify).setOnClickListener(this);
+//        findViewById(R.id.buttonVerify).setOnClickListener(this);
 
         // [START initialize_auth]
         // Initialize Firebase Auth
@@ -185,7 +185,7 @@ public class LaunchCentre extends BaseActivity implements
 //            findViewById(R.id.emailPasswordFields).setVisibility(View.GONE);
 //            findViewById(R.id.signedInButtons).setVisibility(View.VISIBLE);
 
-            findViewById(R.id.buttonVerify).setEnabled(!user.isEmailVerified());
+//            findViewById(R.id.buttonVerify).setEnabled(!user.isEmailVerified());
         } else {
             mStatusTextView.setText(R.string.signed_out);
             mDetailTextView.setText(null);
