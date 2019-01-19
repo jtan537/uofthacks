@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#eff5ff">
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:text="Event Maker"
+        android:textSize="24sp" />
+
+    <GridView
+        android:id="@+id/friendsGridView"
+        android:layout_width="335dp"
+        android:layout_height="372dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:layout_marginEnd="38dp"
+        android:layout_marginBottom="161dp"
+        android:columnWidth="100dp"
+        android:gravity="center"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+        android:textAlignment="center"></GridView>
+
+    <Button
+        android:id="@+id/loadEventButton"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="49dp"
+        android:text="Load Event" />
+
+    <Button
+        android:id="@+id/createEventButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="46dp"
+        android:layout_toEndOf="@+id/loadEventButton"
+        android:text="Create Event" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/friendsGridView"
+        android:layout_alignStart="@+id/friendsGridView"
+        android:text="Friends" />
+
+    <EditText
+        android:id="@+id/friendNameText"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friendsGridView"
+        android:layout_alignStart="@+id/loadEventButton"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="-149dp"
+        android:ems="10"
+        android:hint="Friend name"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/friendEmailText"
+        android:layout_width="208dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friendsGridView"
+        android:layout_marginTop="-149dp"
+        android:layout_toEndOf="@+id/friendNameText"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:hint="and Email"/>
+
+    <Button
+        android:id="@+id/addFriendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/friendsGridView"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="46dp"
+        android:text="Add Friend" />
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="67dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/friendsGridView"
+        android:layout_alignTop="@+id/addFriendButton"
+        android:text="Back" />
+
+    <Button
+        android:id="@+id/receiptButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/addFriendButton"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="117dp"
+        android:enabled="false"
+        android:text="See Receipts" />
+
+</RelativeLayout>
