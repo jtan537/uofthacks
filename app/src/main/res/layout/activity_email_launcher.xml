@@ -36,7 +36,7 @@
         android:layout_marginStart="55dp"
         android:layout_marginTop="255dp"
         android:ems="10"
-        android:hint="Enter email..."
+        android:hint="Email"
         android:inputType="textEmailAddress" />
 
     <Button

@@ -25,6 +25,7 @@
         <activity android:name="fall2018.csc2017.GameCentre.MineSweeper.MineSweeperGameActivity"></activity>
         <activity android:name="fall2018.csc2017.GameCentre.PowersPlus.PowersPlusStartingActivity"></activity>
         <activity android:name="fall2018.csc2017.GameCentre.PowersPlus.PowersPlusGameActivity"></activity>
+        <activity android:name="fall2018.csc2017.GameCentre.UserInterfaceElements.EventActivity"></activity>
     </application>
 
 </manifest>
