@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name="fall2018.csc2017.GameCentre.UserInterfaceElements.LaunchCentre">
+        <activity android:name="fall2018.csc2017.GameCentre.LaunchCentre">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
