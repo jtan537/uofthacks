@@ -7,6 +7,28 @@
     android:orientation="vertical"
     android:background="#eff5ff">
 
+    <Button
+        android:id="@+id/buttonSignOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="-6dp"
+        android:layout_marginBottom="70dp"
+        android:layout_toEndOf="@+id/emailText"
+        android:text="Sign out " />
+
+    <EditText
+        android:id="@+id/passwordText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="53dp"
+        android:layout_marginTop="311dp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textEmailAddress" />
+
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
@@ -45,8 +67,35 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/emailText"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="47dp"
+        android:layout_marginTop="-4dp"
+        android:layout_marginEnd="27dp"
         android:text="Enter" />
+
+    <Button
+        android:id="@+id/buttonCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="136dp"
+        android:layout_toEndOf="@+id/emailText"
+        android:text="Create" />
+
+    <TextView
+        android:id="@+id/txtDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/emailText"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="154dp"
+        android:text="Detail" />
+
+    <TextView
+        android:id="@+id/txtStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonCreate"
+        android:layout_alignStart="@+id/emailText"
+        android:layout_marginTop="-136dp"
+        android:text="Status" />
 
 </RelativeLayout>
