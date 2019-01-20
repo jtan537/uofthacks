@@ -4,22 +4,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-class Event {
+public class Event {
     private List<Friend> participants;
 
     private String eventName;
 
-    Event(String name) {
+    public Event(String name) {
         this.eventName = name;
         this.participants = new ArrayList<>();
         participants.add(new Friend("OWNER", "OWNER'S EMAIL"));
     }
 
-    void addFriend(Friend friend) {
+    public void addFriend(Friend friend) {
         participants.add(friend);
     }
 
-    void newActivity(double cost, List<Friend> participant, boolean isOwnerIn) {
+    public void newActivity(double cost, List<Friend> participant, boolean isOwnerIn) {
         double personalCost;
         if (isOwnerIn) {
             personalCost = cost / (participant.size() + 1);
@@ -31,7 +31,7 @@ class Event {
         }
     }
 
-    void endOfEvent() throws IOException {
+    public void endOfEvent() throws IOException {
         MoneyRequest request = new MoneyRequest(this);
         request.sendRequest();
     }

@@ -1,6 +1,6 @@
 package fall2018.csc2017.GameCentre.InteracTransfer;
 
-class Friend {
+public class Friend {
     private String name;
     private String email;
     private double moneyAmount;

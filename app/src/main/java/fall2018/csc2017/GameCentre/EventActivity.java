@@ -11,16 +11,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 
 
 import java.util.ArrayList;
@@ -29,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import fall2018.csc2017.GameCentre.UserInterfaceElements.ExpenseAdder;
+import fall2018.csc2017.GameCentre.UserInterfaceElements.UserProperty;
 
 
 public class EventActivity extends AppCompatActivity {
@@ -62,8 +58,19 @@ public class EventActivity extends AppCompatActivity {
         FirebaseFirestore.setLoggingEnabled(true);
 
 
+
+
+
         db = FirebaseFirestore.getInstance();
+
+
         friendsRef  = db.collection(String.format("Users/%s/Friends", userEmail));
+
+        // Initialize collection with dummy email document to enable get friends
+        Map<String, Object> user = new HashMap<>();
+        user.put(KEY_FRIENDS, "");
+        friendsRef.add(user);
+
 //        //Make general later
 //
 //        //Fetches the high scores
@@ -117,24 +124,42 @@ public class EventActivity extends AppCompatActivity {
                 //switchToGame(ExpenseAdder.class);
 
                 addFriends(emailName);
-                List<String> friends = getFriends();
-                for(String friend: friends){
-                    Toast.makeText(getApplicationContext(), friend, Toast.LENGTH_SHORT).show();
-                }
+//                for(String friend: friends){
+//                    Toast.makeText(getApplicationContext(), friend, Toast.LENGTH_SHORT).show();
+//                }
             }
         });
     }
 
     private void addFriends(String emailName) {
+        List<String> curFriends = getFriends();
+        System.out.println(curFriends.toString());
+        boolean hasEmail = false;
+        for(String friend: curFriends){
+            System.out.println(friend + " -friend");
+            System.out.println(emailName+ " -emailname");
+           if (friend.equals(emailName)){
+               hasEmail = true;
+               break;
+           }
+        }
+        if(hasEmail == true){
+            System.out.println("STOP IT HAS BAME");
+            Toast.makeText(getApplicationContext(), "Friend email already registered!", Toast.LENGTH_SHORT).show();
 
-        Map<String, Object> user = new HashMap<>();
-        user.put(KEY_FRIENDS, emailName);
+        } else {
+            System.out.println("GO NO NAME BABY");
+            Map<String, Object> user = new HashMap<>();
 
-        friendsRef.add(user);
+            user.put(KEY_FRIENDS, emailName);
 
-        Toast.makeText(getApplicationContext(),
-                emailName,
-                Toast.LENGTH_SHORT).show();
+
+            friendsRef.add(user);
+
+            Toast.makeText(getApplicationContext(),
+                    emailName,
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     private List<String> getFriends(){
@@ -147,7 +172,7 @@ public class EventActivity extends AppCompatActivity {
                     for(QueryDocumentSnapshot doc: task.getResult()){
                         friends.add((String)doc.get(KEY_FRIENDS)); // Will always be friend emails
                     }
-                    System.out.println(friends.toString());
+                    //System.out.println(friends.toString());
                     Log.d(TAG, friends.toString());
                 } else {
                     Log.d(TAG, "Error getting friend docs: ", task.getException());
@@ -187,6 +212,8 @@ public class EventActivity extends AppCompatActivity {
             }
         });
     }
+
+
     /**
      * Switches to game that was selected
      */

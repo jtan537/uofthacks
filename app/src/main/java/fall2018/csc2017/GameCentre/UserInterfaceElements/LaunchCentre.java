@@ -35,6 +35,8 @@ public class LaunchCentre extends BaseActivity implements
     private EditText mEmailField;
     private EditText mPasswordField;
 
+    private boolean goodToGo = false;
+
     private String userEmail;
 
     // [START declare_auth]
@@ -94,15 +96,19 @@ public class LaunchCentre extends BaseActivity implements
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            goodToGo = true;
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
                             updateUI(user);
                         } else {
+                            goodToGo = false;
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(LaunchCentre.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+
                             updateUI(null);
                         }
 
@@ -129,12 +135,15 @@ public class LaunchCentre extends BaseActivity implements
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            goodToGo = true;
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
+                            goodToGo = false;
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(LaunchCentre.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -207,13 +216,25 @@ public class LaunchCentre extends BaseActivity implements
         int i = v.getId();
         if (i == R.id.buttonCreate) {
             createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
-            switchToEvents();
+            if (goodToGo){
+                switchToEvents();
+            }
+
         } else if (i == R.id.enterButton) {
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
-            switchToEvents();
+            if (goodToGo){
+                switchToEvents();
+            }
+
         } else if (i == R.id.buttonSignOut) {
             signOut();
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        signOut();
     }
 
 
