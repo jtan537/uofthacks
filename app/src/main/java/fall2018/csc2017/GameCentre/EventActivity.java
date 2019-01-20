@@ -10,13 +10,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 
 import java.util.ArrayList;
@@ -30,15 +34,15 @@ import fall2018.csc2017.GameCentre.UserInterfaceElements.ExpenseAdder;
 public class EventActivity extends AppCompatActivity {
 
     private static final String USER_EMAIL = "Email";
-    private static final String KEY_FRIENDS = "Friends";
+    private static final String KEY_FRIENDS = "FRIEND EMAIL";
     private static final String TAG = "EventActivity";
 
-    List<String> friends;
+    private UserProperty user = new UserProperty();
 
     private String userEmail;
 
     private FirebaseFirestore db ;
-    private DocumentReference friendsRef;
+    private CollectionReference friendsRef;
     /**
      * The current logged in user
      */
@@ -59,7 +63,7 @@ public class EventActivity extends AppCompatActivity {
 
 
         db = FirebaseFirestore.getInstance();
-        friendsRef  = db.collection("Users").document(userEmail);
+        friendsRef  = db.collection(String.format("Users/%s/Friends", userEmail));
 //        //Make general later
 //
 //        //Fetches the high scores
@@ -112,40 +116,47 @@ public class EventActivity extends AppCompatActivity {
                 String emailName = emailNameText.getText().toString();
                 //switchToGame(ExpenseAdder.class);
 
-                // Sets up friend list
-                loadFriends(v);
-                friends.add(emailName);
-                Map<String, Object> user = new HashMap<>();
-                user.put(KEY_FRIENDS, friends);
-
-                db.collection("Users").document(userEmail).set(user);
-
-                Toast.makeText(getApplicationContext(),
-                        friends.get(0),
-                        Toast.LENGTH_SHORT).show();
+                addFriends(emailName);
+                List<String> friends = getFriends();
+                for(String friend: friends){
+                    Toast.makeText(getApplicationContext(), friend, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
-    public void loadFriends(View v){
-        friendsRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+    private void addFriends(String emailName) {
+
+        Map<String, Object> user = new HashMap<>();
+        user.put(KEY_FRIENDS, emailName);
+
+        friendsRef.add(user);
+
+        Toast.makeText(getApplicationContext(),
+                emailName,
+                Toast.LENGTH_SHORT).show();
+    }
+
+    private List<String> getFriends(){
+        final List<String> friends = new ArrayList<>();
+        friendsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()){
-                    friends = (List<String>) documentSnapshot.get(KEY_FRIENDS);
-                }else{
-                    friends = new ArrayList<>();
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+
+                    for(QueryDocumentSnapshot doc: task.getResult()){
+                        friends.add((String)doc.get(KEY_FRIENDS)); // Will always be friend emails
+                    }
+                    System.out.println(friends.toString());
+                    Log.d(TAG, friends.toString());
+                } else {
+                    Log.d(TAG, "Error getting friend docs: ", task.getException());
                 }
             }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(EventActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "onFailure");
-;                    }
-                });
+        });
+        return friends;
     }
+
 
 
     /**
