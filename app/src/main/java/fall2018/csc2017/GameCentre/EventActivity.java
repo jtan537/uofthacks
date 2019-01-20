@@ -1,4 +1,4 @@
-package fall2018.csc2017.GameCentre.UserInterfaceElements;
+package fall2018.csc2017.GameCentre;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,23 +8,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fall2018.csc2017.GameCentre.DataManagers.Event;
-import fall2018.csc2017.GameCentre.R;
+import fall2018.csc2017.GameCentre.UserInterfaceElements.ExpenseAdder;
 
 
 public class EventActivity extends AppCompatActivity {
@@ -49,8 +49,15 @@ public class EventActivity extends AppCompatActivity {
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    //Fetches the current user
-        userEmail = (String) getIntent().getSerializableExtra("CurUser");
+        setContentView(R.layout.activity_event_starting);
+
+        //Fetches the current user
+        userEmail = getIntent().getStringExtra("CurUser");
+
+        // Enable Firestore logging
+        FirebaseFirestore.setLoggingEnabled(true);
+
+
         db = FirebaseFirestore.getInstance();
         friendsRef  = db.collection("Users").document(userEmail);
 //        //Make general later
@@ -85,9 +92,7 @@ public class EventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //switchToGame(ExpenseAdder.class);
-                Toast.makeText(getApplicationContext(),
-                        "No event to load!",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), userEmail, Toast.LENGTH_SHORT).show();;
             }
         });
     }

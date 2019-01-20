@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "718676945696-9jbgo6smnu2l9n6mpch0pdmmire5j37s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fall2018.csc2017.GameCentre",
+            "certificate_hash": "0d7392403272d860adf459b31dab78259969334c"
+          }
+        },
+        {
           "client_id": "718676945696-ehdaddrmfcn0qnr9tc7qbkcljh7j2cid.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "718676945696-ehdaddrmfcn0qnr9tc7qbkcljh7j2cid.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

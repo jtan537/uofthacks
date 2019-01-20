@@ -15,8 +15,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
+import fall2018.csc2017.GameCentre.EventActivity;
 import fall2018.csc2017.GameCentre.R;
 
 
@@ -79,8 +79,9 @@ public class LaunchCentre extends BaseActivity implements
         updateUI(currentUser);
     }
 
-    private void createAccount(final String email, String password) {
+    private void createAccount(String email, String password) {
         Log.d(TAG, "createAccount:" + email);
+        userEmail = email;
         if (!validateForm()) {
             return;
         }
@@ -95,7 +96,6 @@ public class LaunchCentre extends BaseActivity implements
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
-                            userEmail = email;
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                         } else {
@@ -114,8 +114,9 @@ public class LaunchCentre extends BaseActivity implements
         // [END create_user_with_email]
     }
 
-    private void signIn(final String email, String password) {
+    private void signIn(String email, String password) {
         Log.d(TAG, "signIn:" + email);
+        userEmail = email;
         if (!validateForm()) {
             return;
         }
@@ -130,7 +131,6 @@ public class LaunchCentre extends BaseActivity implements
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            userEmail = email;
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                         } else {
@@ -226,6 +226,8 @@ public class LaunchCentre extends BaseActivity implements
         //Store the current user in the next activity
         //Store the current user in the next activity
         tmp.putExtra("CurUser", userEmail);
+
+//        Toast.makeText(this, userEmail, Toast.LENGTH_SHORT).show();
 
         startActivity(tmp);
     }
