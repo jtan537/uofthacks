@@ -85,9 +85,7 @@ public class ExpenseAdder extends AppCompatActivity {
         // jimmy IMPORTS
         //Fetches the current user
         userEmail = getIntent().getStringExtra("userEmail");
-        System.out.println("***********************************************************");
-        System.out.println(userEmail);
-        System.out.println("***********************************************************");
+
         // Enable Firestore logging
         FirebaseFirestore.setLoggingEnabled(true);
         db = FirebaseFirestore.getInstance();
@@ -95,24 +93,13 @@ public class ExpenseAdder extends AppCompatActivity {
         // JIMMY IMPORTS
 
         // THIS IS WHERE I GET THE FRIENDS LIST FROM THE CLOUD
-        // TODO: Add input from the cloud.
-          friends = getFriendObjects();
-
-
-//        Friend f1 = new Friend("Zuhab Wasim", "z-wasim-786@live.com");
-//        Friend f2 = new Friend("Jimmy Tan", "jtan5372@gmail.com");
-//        Friend f3 = new Friend("Alex Quach", "alex.quach1234@gmail.com");
-//        Friend f4 = new Friend("Frederick Yao", "yuzhou.yao@mail.utoronto.ca");
-//        friends.add(f1);
-//        friends.add(f2);
-//        friends.add(f3);
-//        friends.add(f4);
 
         //CheckBox chkbox = new CheckBox();
 
         //Adds the necessary buttons
         addNextExpenseButtonListener();
         addDoneEventButtonListener();
+        addUpdateButtonListener();
 
         // Adds output of scoreboard's GridView
         checkGridView = findViewById(R.id.checkGridView);
@@ -120,6 +107,7 @@ public class ExpenseAdder extends AppCompatActivity {
 
         addCheckGridListenerOnSpinnerSelection();
 
+        getFriends();
         // Generates the friend grid.
         generateCheckGrid(friends);
 
@@ -145,58 +133,40 @@ public class ExpenseAdder extends AppCompatActivity {
         });
     }
 
-    public List<Friend> getFriendObjects(){
-        List<Friend> friendObjs = new ArrayList<>();
-        List<String> friendNameMail = getFriends();
+    private void getFriends(){
 
-//        System.out.println("***********************************************************");
-//        System.out.println(friendNameMail);
-//        System.out.println("***********************************************************");
-        List<String> names = new ArrayList<>();
-        List<String> emails = new ArrayList<>();
+        db.collection("Users").document(userEmail).collection("Friends")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                //Log.d(TAG, document.getId() + " => " + document.getData());
+                                //System.out.println(document.getData());
+                                //{Name and Email=yooyo eee@r.s}
+                                String st = document.getData().toString();
 
+                                st = st.substring(st.indexOf("="));
+                                if (!st.equals("=}")) {
+                                    st.substring(1,st.length() - 1);
 
-        for (String namemail: friendNameMail){
-            // Ignore the dummy empty name mail
-            if (namemail.length() >= 2) {
-                String[] items = namemail.split(" ");
-                //names.add(namemail.substring(0, namemail.indexOf(' ') - 1));
-                //emails.add(namemail.substring(namemail.indexOf(' ')));
-//                names.add(items[0]);
-//                emails.add(items[1]);
-                Friend j = new Friend(items[0], items[1]);
-                friendObjs.add(j);
-            }
-        }
+                                    String items[] = st.trim().split(" ");
+                                    items[0] = items[0].substring(1);
+                                    items[1] = items[1].substring(0,items[1].length() - 1);
 
-//        for (int i = 0; i != names.size(); i++){
-//            Friend curFriend = new Friend(names.get(i), emails.get(i));
-//            friendObjs.add(curFriend);
-//        }
-        return friendObjs;
-    }
-
-    private List<String> getFriends(){
-        final List<String> friends = new ArrayList<>();
-
-        System.out.println("***********************************************************");
-        System.out.println(friendsRef.get().toString());
-        System.out.println("***********************************************************");
-        friendsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for(QueryDocumentSnapshot doc: task.getResult()){
-                        friends.add((String)doc.get(KEY_FRIENDS)); // Will always be friend emails
+                                    //System.out.println("[" + items[0] + ", " + items[1] + "]");
+                                    Log.d(TAG, "[" + items[0] + ", " + items[1] + "]");
+                                    Friend curr = new Friend(items[0].trim(), items[1].trim());
+                                    friends.add(curr);
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            System.out.println(task.getException());
+                        }
                     }
-                    //System.out.println(friends.toString());
-                    Log.d(TAG, friends.toString());
-                } else {
-                    Log.d(TAG, "Error getting friend docs: ", task.getException());
-                }
-            }
-        });
-        return friends;
+                });
     }
 
     /**
@@ -211,6 +181,24 @@ public class ExpenseAdder extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         "Only one expense sorry!",
                         Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Checks to see if the user has selected sliding tiles as their game
+     */
+    private void addUpdateButtonListener() {
+        Button nextExpense = findViewById(R.id.updateButton);
+        nextExpense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //switchToGame(ExpenseAdder.class);
+                Toast.makeText(getApplicationContext(),
+                        "Only one expense sorry!",
+                        Toast.LENGTH_SHORT).show();
+                getFriends();
+                generateCheckGrid(friends);
             }
         });
     }
@@ -235,15 +223,17 @@ public class ExpenseAdder extends AppCompatActivity {
                 if (yourself.isChecked()) {
                     owner = true;
                 }
-
+                String st2 = "";
                 for(int i=first + 1; i<=last; ++i){
                     CheckBox item = (CheckBox) checkGridView.getItemAtPosition(i);
-                    //st2 += (item.isChecked()) ? "1" : "0";
+                    st2 += (item.isChecked()) ? "1" : "0";
                     if (item.isChecked()) {
                         participants.add(friends.get(counter));
                     }
                     counter++;
                 }
+                Toast.makeText(getApplicationContext(), st2, Toast.LENGTH_SHORT).show();
+
                 EditText eventText = findViewById(R.id.expenseNameText);
                 EditText costText = findViewById(R.id.expenseCostText);
                 String event = eventText.getText().toString().trim().toLowerCase();
@@ -251,17 +241,18 @@ public class ExpenseAdder extends AppCompatActivity {
                 double cost = Double.parseDouble(costST);
 //                if (participants.size() > 0 && participants.get(0).get)
 
-                Event currentEvent = (Event) getIntent().getSerializableExtra("event");
-
+                Event currentEvent = (Event) getIntent().getSerializableExtra("currentEvent");
+                System.out.println(currentEvent);
                 // all the friends who came to EVENT
                 for (Friend f: friends) {
                     currentEvent.addFriend(f);
                 }
 
-//                currentEvent.newActivity(cost, participants); //and owner after pull
+                currentEvent.newActivity(cost, participants, owner); //and owner after pull
 
                 try {
                     currentEvent.endOfEvent();
+                    Toast.makeText(getApplicationContext(), "Requests Sent!", Toast.LENGTH_SHORT).show();
                 } catch (IOException e) {
                     System.out.println("Something went wrong!");
                 }

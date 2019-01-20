@@ -46,7 +46,7 @@ public class EventActivity extends AppCompatActivity {
     private static final String TAG = "EventActivity";
     private UserProperty user = new UserProperty();
     private String userEmail;
-    private FirebaseFirestore db ;
+    private FirebaseFirestore db;
     private CollectionReference friendsRef;
     // JIMMY IMPORTS
 
@@ -88,6 +88,7 @@ public class EventActivity extends AppCompatActivity {
         // THIS IS WHERE I GET THE FRIENDS LIST FROM THE CLOUD
           // Initialize friend list.
 
+
 //        Friend f1 = new Friend("Zuhab Wasim", "z-wasim-786@live.com");
 //        Friend f2 = new Friend("Jimmy Tan", "jtan5372@gmail.com");
 //        Friend f3 = new Friend("Alex Quach", "alex.quach1234@gmail.com");
@@ -108,12 +109,13 @@ public class EventActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         friendsRef  = db.collection("Users").document(userEmail).collection("Friends");
         // Initialize collection with dummy email document to enable get friends
+
         Map<String, Object> user = new HashMap<>();
         user.put(KEY_FRIENDS, "");
         friendsRef.add(user);
         // JIMMY IMPORTS
 
-        friends = getFriendObjects();
+        friends = new ArrayList<>();//getFriendObjects();
         //Adds the necessary buttons
         addCreateEventButtonListener();
         addLoadEventButtonListener();
@@ -124,6 +126,8 @@ public class EventActivity extends AppCompatActivity {
         // Adds output of scoreboard's GridView
         friendGridView = findViewById(R.id.friendsGridView);
         friendGridView.setNumColumns(NUM_COLUMNS);
+
+        getFriends();
 
         // Generates the friend grid.
         generateFriendGrid(friends);
@@ -166,7 +170,8 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void addFriends(String emailName) {
-        List<String> curFriends = getFriends();
+        List<String> curFriends = new ArrayList<>(); //getFriends();
+        getFriends();
         System.out.println(curFriends.toString());
         boolean hasEmail = false;
         for(String friend: curFriends){
@@ -196,45 +201,63 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
-    public  List<Friend> getFriendObjects(){
-        List<Friend> friendObjs = new ArrayList<>();
-        List<String> friendNameMail = getFriends();
+//    public  List<Friend> getFriendObjects(){
+//        List<Friend> friendObjs = new ArrayList<>();
+//        //List<String> friendNameMail = getFriends();
+//
+//        List<String> names = new ArrayList<>();
+//        List<String> emails = new ArrayList<>();
+//
+//        for (String namemail: friendNameMail){
+//            // Ignore the dummy empty name mail
+//            if (namemail.length() >= 2) {
+//                names.add(namemail.substring(0, namemail.indexOf(' ') - 1));
+//                emails.add(namemail.substring(namemail.indexOf(' ')));
+//            }
+//        }
+//
+//        for (int i = 0; i != names.size(); i++){
+//            Friend curFriend = new Friend(names.get(i), emails.get(i));
+//            friendObjs.add(curFriend);
+//        }
+//        return friendObjs;
+//    }
 
-        List<String> names = new ArrayList<>();
-        List<String> emails = new ArrayList<>();
 
-        for (String namemail: friendNameMail){
-            // Ignore the dummy empty name mail
-            if (namemail.length() >= 2) {
-                names.add(namemail.substring(0, namemail.indexOf(' ') - 1));
-                emails.add(namemail.substring(namemail.indexOf(' ')));
-            }
-        }
+    private void getFriends(){
 
-        for (int i = 0; i != names.size(); i++){
-            Friend curFriend = new Friend(names.get(i), emails.get(i));
-            friendObjs.add(curFriend);
-        }
-        return friendObjs;
-    }
+        db.collection("Users").document(userEmail).collection("Friends")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                //Log.d(TAG, document.getId() + " => " + document.getData());
+                                //System.out.println(document.getData());
+                                //{Name and Email=yooyo eee@r.s}
+                                String st = document.getData().toString();
 
-    private List<String> getFriends(){
-        final List<String> friends = new ArrayList<>();
-        System.out.println(userEmail);
-        db.collection("Users").document("brandon@gmail.com").collection("Friends").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    System.out.println("***************");
-                    System.out.println("DIDNT LISTEN");
-                    System.out.println("***************");
-                }
-                for(DocumentSnapshot doc: queryDocumentSnapshots){
-                    friends.add((String)doc.get(KEY_FRIENDS)); // Will always be friend emails
-                }
-            }
-        });
-        return friends;
+                                st = st.substring(st.indexOf("="));
+                                if (!st.equals("=}")) {
+                                    st.substring(1,st.length() - 1);
+
+                                    String items[] = st.trim().split(" ");
+                                    items[0] = items[0].substring(1);
+                                    items[1] = items[1].substring(0,items[1].length() - 1);
+
+                                    //System.out.println("[" + items[0] + ", " + items[1] + "]");
+                                    Log.d(TAG, "[" + items[0] + ", " + items[1] + "]");
+                                    Friend curr = new Friend(items[0].trim(), items[1].trim());
+                                    friends.add(curr);
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            System.out.println(task.getException());
+                        }
+                    }
+                });
     }
 
     /**
