@@ -2,7 +2,9 @@ package fall2018.csc2017.GameCentre.UserInterfaceElements;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -16,11 +18,22 @@ import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import fall2018.csc2017.GameCentre.InteracTransfer.Event;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fall2018.csc2017.GameCentre.InteracTransfer.Friend;
 import fall2018.csc2017.GameCentre.R;
@@ -31,6 +44,16 @@ public class ExpenseAdder extends AppCompatActivity {
      * The GridView to display all score elements.
      */
     private GridView checkGridView;
+
+    // JIMMY IMPORTS
+    private static final String USER_EMAIL = "Email";
+    private static final String KEY_FRIENDS = "Name and Email";
+    private static final String TAG = "EventActivity";
+    private UserProperty user = new UserProperty();
+    private String userEmail;
+    private FirebaseFirestore db ;
+    private CollectionReference friendsRef;
+    // JIMMY IMPORTS
 
     /**
      * Constant for the number of columns in the friend board.
@@ -47,6 +70,8 @@ public class ExpenseAdder extends AppCompatActivity {
      */
     private ArrayList<View> checkItems = new ArrayList<>();
 
+
+
     /**
      * The friend list from the cloud.
      */
@@ -57,16 +82,31 @@ public class ExpenseAdder extends AppCompatActivity {
 
         setContentView(R.layout.activity_expense_adder);
 
+        // jimmy IMPORTS
+        //Fetches the current user
+        userEmail = getIntent().getStringExtra("userEmail");
+        System.out.println("***********************************************************");
+        System.out.println(userEmail);
+        System.out.println("***********************************************************");
+        // Enable Firestore logging
+        FirebaseFirestore.setLoggingEnabled(true);
+        db = FirebaseFirestore.getInstance();
+        friendsRef  = db.collection("Users").document(userEmail).collection("Friends");
+        // JIMMY IMPORTS
+
         // THIS IS WHERE I GET THE FRIENDS LIST FROM THE CLOUD
         // TODO: Add input from the cloud.
-        Friend f1 = new Friend("Zuhab Wasim", "z-wasim-786@live.com");
-        Friend f2 = new Friend("Jimmy Tan", "jtan5372@gmail.com");
-        Friend f3 = new Friend("Alex Quach", "alex.quach1234@gmail.com");
-        Friend f4 = new Friend("Frederick Yao", "yuzhou.yao@mail.utoronto.ca");
-        friends.add(f1);
-        friends.add(f2);
-        friends.add(f3);
-        friends.add(f4);
+          friends = getFriendObjects();
+
+
+//        Friend f1 = new Friend("Zuhab Wasim", "z-wasim-786@live.com");
+//        Friend f2 = new Friend("Jimmy Tan", "jtan5372@gmail.com");
+//        Friend f3 = new Friend("Alex Quach", "alex.quach1234@gmail.com");
+//        Friend f4 = new Friend("Frederick Yao", "yuzhou.yao@mail.utoronto.ca");
+//        friends.add(f1);
+//        friends.add(f2);
+//        friends.add(f3);
+//        friends.add(f4);
 
         //CheckBox chkbox = new CheckBox();
 
@@ -103,6 +143,60 @@ public class ExpenseAdder extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
+    }
+
+    public List<Friend> getFriendObjects(){
+        List<Friend> friendObjs = new ArrayList<>();
+        List<String> friendNameMail = getFriends();
+
+//        System.out.println("***********************************************************");
+//        System.out.println(friendNameMail);
+//        System.out.println("***********************************************************");
+        List<String> names = new ArrayList<>();
+        List<String> emails = new ArrayList<>();
+
+
+        for (String namemail: friendNameMail){
+            // Ignore the dummy empty name mail
+            if (namemail.length() >= 2) {
+                String[] items = namemail.split(" ");
+                //names.add(namemail.substring(0, namemail.indexOf(' ') - 1));
+                //emails.add(namemail.substring(namemail.indexOf(' ')));
+//                names.add(items[0]);
+//                emails.add(items[1]);
+                Friend j = new Friend(items[0], items[1]);
+                friendObjs.add(j);
+            }
+        }
+
+//        for (int i = 0; i != names.size(); i++){
+//            Friend curFriend = new Friend(names.get(i), emails.get(i));
+//            friendObjs.add(curFriend);
+//        }
+        return friendObjs;
+    }
+
+    private List<String> getFriends(){
+        final List<String> friends = new ArrayList<>();
+
+        System.out.println("***********************************************************");
+        System.out.println(friendsRef.get().toString());
+        System.out.println("***********************************************************");
+        friendsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for(QueryDocumentSnapshot doc: task.getResult()){
+                        friends.add((String)doc.get(KEY_FRIENDS)); // Will always be friend emails
+                    }
+                    //System.out.println(friends.toString());
+                    Log.d(TAG, friends.toString());
+                } else {
+                    Log.d(TAG, "Error getting friend docs: ", task.getException());
+                }
+            }
+        });
+        return friends;
     }
 
     /**
@@ -157,8 +251,7 @@ public class ExpenseAdder extends AppCompatActivity {
                 double cost = Double.parseDouble(costST);
 //                if (participants.size() > 0 && participants.get(0).get)
 
-                //TODO: Retrieve the event that we had
-                Event currentEvent = new Event("");
+                Event currentEvent = (Event) getIntent().getSerializableExtra("event");
 
                 // all the friends who came to EVENT
                 for (Friend f: friends) {

@@ -23,22 +23,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fall2018.csc2017.GameCentre.InteracTransfer.Friend;
 import fall2018.csc2017.GameCentre.UserInterfaceElements.ExpenseAdder;
 import fall2018.csc2017.GameCentre.UserInterfaceElements.UserProperty;
 
 
 public class EventActivity extends AppCompatActivity {
 
+    // JIMMY IMPORTS
     private static final String USER_EMAIL = "Email";
-    private static final String KEY_FRIENDS = "FRIEND EMAIL";
+    private static final String KEY_FRIENDS = "Name and Email";
     private static final String TAG = "EventActivity";
-
     private UserProperty user = new UserProperty();
-
     private String userEmail;
-
     private FirebaseFirestore db ;
     private CollectionReference friendsRef;
+    // JIMMY IMPORTS
+
     /**
      * The current logged in user
      */
@@ -51,18 +52,14 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_starting);
 
+        // jimmy IMPORTS
         //Fetches the current user
         userEmail = getIntent().getStringExtra("CurUser");
 
         // Enable Firestore logging
         FirebaseFirestore.setLoggingEnabled(true);
 
-
-
-
-
         db = FirebaseFirestore.getInstance();
-
 
         friendsRef  = db.collection(String.format("Users/%s/Friends", userEmail));
 
@@ -70,6 +67,7 @@ public class EventActivity extends AppCompatActivity {
         Map<String, Object> user = new HashMap<>();
         user.put(KEY_FRIENDS, "");
         friendsRef.add(user);
+        // JIMMY IMPORTS
 
 //        //Make general later
 //
@@ -121,9 +119,11 @@ public class EventActivity extends AppCompatActivity {
                 EditText emailNameText = findViewById(R.id.friendEmailText);
                 String friendName = friendNameText.getText().toString();
                 String emailName = emailNameText.getText().toString();
+
+                String emailPlusName = friendName +' '+ emailName;
                 //switchToGame(ExpenseAdder.class);
 
-                addFriends(emailName);
+                addFriends(emailPlusName);
 //                for(String friend: friends){
 //                    Toast.makeText(getApplicationContext(), friend, Toast.LENGTH_SHORT).show();
 //                }
@@ -160,6 +160,28 @@ public class EventActivity extends AppCompatActivity {
                     emailName,
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public List<Friend> getFriendObjects(){
+        List<Friend> friendObjs = new ArrayList<>();
+        List<String> friendNameMail = getFriends();
+
+        List<String> names = new ArrayList<>();
+        List<String> emails = new ArrayList<>();
+
+        for (String namemail: friendNameMail){
+            // Ignore the dummy empty name mail
+            if (namemail.length() >= 2) {
+                names.add(namemail.substring(0, namemail.indexOf(' ') - 1));
+                emails.add(namemail.substring(namemail.indexOf(' ')));
+            }
+        }
+
+        for (int i = 0; i != names.size(); i++){
+            Friend curFriend = new Friend(names.get(i), emails.get(i));
+            friendObjs.add(curFriend);
+        }
+        return friendObjs;
     }
 
     private List<String> getFriends(){

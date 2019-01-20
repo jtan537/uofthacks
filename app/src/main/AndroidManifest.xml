@@ -17,7 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="fall2018.csc2017.GameCentre.EventActivity"></activity>
+        <activity android:name="fall2018.csc2017.GameCentre.UserInterfaceElements.EventActivity"></activity>
         <activity android:name= "fall2018.csc2017.GameCentre.UserInterfaceElements.ExpenseAdder"></activity>
     </application>
 

@@ -1,6 +1,8 @@
 package fall2018.csc2017.GameCentre.InteracTransfer;
 
-public class Friend {
+import java.io.Serializable;
+
+public class Friend implements Serializable {
     private String name;
     private String email;
     private double moneyAmount;

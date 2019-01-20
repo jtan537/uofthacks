@@ -1,13 +1,22 @@
 package fall2018.csc2017.GameCentre.InteracTransfer;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Event {
+public class Event implements Serializable {
     private List<Friend> participants;
 
     private String eventName;
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "participants=" + participants +
+                ", eventName='" + eventName + '\'' +
+                '}';
+    }
 
     public Event(String name) {
         this.eventName = name;

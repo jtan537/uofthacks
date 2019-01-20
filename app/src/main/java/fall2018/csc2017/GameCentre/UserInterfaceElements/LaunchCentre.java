@@ -16,7 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import fall2018.csc2017.GameCentre.EventActivity;
+import fall2018.csc2017.GameCentre.UserInterfaceElements.EventActivity;
 import fall2018.csc2017.GameCentre.R;
 
 
@@ -246,7 +246,7 @@ public class LaunchCentre extends BaseActivity implements
 
         //Store the current user in the next activity
         //Store the current user in the next activity
-        tmp.putExtra("CurUser", userEmail);
+        tmp.putExtra("userEmail", userEmail);
 
 //        Toast.makeText(this, userEmail, Toast.LENGTH_SHORT).show();
 
