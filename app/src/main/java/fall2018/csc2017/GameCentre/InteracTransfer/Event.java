@@ -4,37 +4,43 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Event {
+class Event {
     private List<Friend> participants;
 
     private String eventName;
 
-    public Event(String name) {
+    Event(String name) {
         this.eventName = name;
         this.participants = new ArrayList<>();
+        participants.add(new Friend("OWNER", "OWNER'S EMAIL"));
     }
 
-    public void addFriend(Friend friend) {
+    void addFriend(Friend friend) {
         participants.add(friend);
     }
 
-    public void newActivity(double cost, List<Friend> participant) {
-        double personalCost = cost / participant.size();
+    void newActivity(double cost, List<Friend> participant, boolean isOwnerIn) {
+        double personalCost;
+        if (isOwnerIn) {
+            personalCost = cost / (participant.size() + 1);
+        } else{
+            personalCost = cost / participant.size();
+        }
         for (Friend f : participant) {
             f.increaseCost(personalCost);
         }
     }
 
-    public void endOfEvent() throws IOException {
+    void endOfEvent() throws IOException {
         MoneyRequest request = new MoneyRequest(this);
         request.sendRequest();
     }
 
-    public List<Friend> getParticipants() {
+    List<Friend> getParticipants() {
         return participants;
     }
 
-    public String getEventName() {
+    String getEventName() {
         return eventName;
     }
 }

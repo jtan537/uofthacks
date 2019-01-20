@@ -16,6 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import fall2018.csc2017.GameCentre.EventActivity;
 import fall2018.csc2017.GameCentre.R;
 
 
@@ -26,12 +27,15 @@ import fall2018.csc2017.GameCentre.R;
 public class LaunchCentre extends BaseActivity implements
         View.OnClickListener {
 
-    private static final String TAG = "EmailPassword";
+    private static final String TAG = "LaunchCentre";
+
 
     private TextView mStatusTextView;
     private TextView mDetailTextView;
     private EditText mEmailField;
     private EditText mPasswordField;
+
+    private String userEmail;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -77,6 +81,7 @@ public class LaunchCentre extends BaseActivity implements
 
     private void createAccount(String email, String password) {
         Log.d(TAG, "createAccount:" + email);
+        userEmail = email;
         if (!validateForm()) {
             return;
         }
@@ -111,6 +116,7 @@ public class LaunchCentre extends BaseActivity implements
 
     private void signIn(String email, String password) {
         Log.d(TAG, "signIn:" + email);
+        userEmail = email;
         if (!validateForm()) {
             return;
         }
@@ -201,8 +207,10 @@ public class LaunchCentre extends BaseActivity implements
         int i = v.getId();
         if (i == R.id.buttonCreate) {
             createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
+            switchToEvents();
         } else if (i == R.id.enterButton) {
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
+            switchToEvents();
         } else if (i == R.id.buttonSignOut) {
             signOut();
         }
@@ -212,11 +220,14 @@ public class LaunchCentre extends BaseActivity implements
     /**
      * Switch to the Game selector view to select what game to play.
      */
-    private void switchToGameSelector() {
+    private void switchToEvents() {
         Intent tmp = new Intent(this, EventActivity.class);
 
         //Store the current user in the next activity
+        //Store the current user in the next activity
+        tmp.putExtra("CurUser", userEmail);
 
+//        Toast.makeText(this, userEmail, Toast.LENGTH_SHORT).show();
 
         startActivity(tmp);
     }
