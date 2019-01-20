@@ -60,7 +60,10 @@ class MoneyRequest {
 
     void sendRequest() throws IOException {
         for (Friend f : event.getParticipants()) {
-            generateRequest(f.getName(), f.getEmail(), Double.toString(f.getMoneyAmount()), event.getEventName());
+            if (f.getMoneyAmount() > 0 && !f.getName().equals("OWNER")) {
+                generateRequest(f.getName(), f.getEmail(), Double.toString(f.getMoneyAmount()),
+                        event.getEventName());
+            }
         }
     }
 }
